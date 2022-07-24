@@ -5,6 +5,7 @@
 # @file  dev.py
 # @description 开发环境的settings配置文件
 """
+import sys
 
 """
 Django settings for meiduo_mall project.
@@ -22,6 +23,8 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(BASE_DIR, 'apps'))
+print(sys.path)
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -43,7 +46,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'meiduo_mall',
+    # 用户模块
+    'meiduo_mall.apps.users',
 ]
 
 MIDDLEWARE = [

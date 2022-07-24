@@ -215,3 +215,16 @@ STATICFILE_DIRS = [os.path.join(BASE_DIR, 'static')]
 ~~~
 
 ![image-20220723175958894](https://raw.githubusercontent.com/zhouwei1997/Image/master/202207231759168.png)
+
+#  用户注册模块
+
+~~~python
+# 创建子应用
+python manage.py startapp users
+~~~
+
+![image-20220723180557034](https://raw.githubusercontent.com/zhouwei1997/Image/master/202207231805094.png)
+
+注册用户模块，在`dev.py`中注册
+
+![image-20220723180740585](https://raw.githubusercontent.com/zhouwei1997/Image/master/202207231807669.png)
