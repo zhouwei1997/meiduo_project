@@ -211,10 +211,10 @@ LOGGING = {
 # 指定加载静态文件的路由前缀
 STATIC_URL = '/static/'
 # 配置静态文件加载路径
-STATICFILE_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 ~~~
 
-![image-20220723175958894](https://raw.githubusercontent.com/zhouwei1997/Image/master/202207231759168.png)
+![image-20220724152824437](https://raw.githubusercontent.com/zhouwei1997/Image/master/202207241528662.png)
 
 #  用户注册模块
 
@@ -228,3 +228,48 @@ python manage.py startapp users
 注册用户模块，在`dev.py`中注册
 
 ![image-20220723180740585](https://raw.githubusercontent.com/zhouwei1997/Image/master/202207231807669.png)
+
+## 创建用户视图
+
+添加路由信息
+
+![image-20220727093254429](https://raw.githubusercontent.com/zhouwei1997/Image/master/202207270932515.png)
+
+在`urls.py`中包含该路由信息
+
+~~~python 
+urlpatterns = [
+    url(r'^admin/', admin.site.urls),
+    # user
+    url(r'^', include('users.urls'), namespaces='user'),
+]
+~~~
+
+## Django默认用户认证系统
+
+~~~python
+from django.contrib.auth.models import AbstractUser
+from django.db import models
+
+
+# Create your models here.
+
+class User(AbstractUser):
+    """
+    自定义用户模型类
+    """
+    mobile = models.CharField(max_length=11, unique=True, verbose_name='手机号')
+
+    class Meta:
+        db_table = 'tb_user'
+        verbose_name = '用户'
+        verbose_name_plural = verbose_name
+
+    def __str__(self):
+        return self.name
+~~~
+
+
+
+
+

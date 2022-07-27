@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # 用户模块
-    'meiduo_mall.apps.users',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -148,7 +148,7 @@ USE_TZ = True
 # 指定加载静态文件的路由前缀
 STATIC_URL = '/static/'
 # 配置静态文件加载路径
-STATICFILE_DIRS = [os.path.join(BASE_DIR, 'static')]
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
 # 配置Redis缓存
 CACHES = {
@@ -220,3 +220,6 @@ LOGGING = {
         },
     }
 }
+
+# 指定自定义的用户模型类
+AUTH_USER_MODEL = 'users.User'
