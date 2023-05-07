@@ -201,7 +201,8 @@ LOGGING = {
         'file': {
             'level': 'INFO',
             'class': 'logging.handlers.RotatingFileHandler',
-            'filename': os.path.join(log_path, 'meiduo_mall-{}.log'.format(time.strftime('%Y-%m-%d'))),  # 日志文件的位置
+            # 日志文件的位置
+            'filename': os.path.join(log_path, 'meiduo_mall-{}.log'.format(time.strftime('%Y-%m-%d'))),
             'maxBytes': 300 * 1024 * 1024,  # 文件大小  300M
             'backupCount': 10,  # 备份数
             'formatter': 'standard',  # 输出格式
