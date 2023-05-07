@@ -13,9 +13,12 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+import sys
 import time
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# 追加导包路径
+sys.path.insert(0, os.path.join(BASE_DIR, 'app'))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -37,6 +40,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    # 'meiduo_mall.app.users',  # 用户模块
+    'users',  # 用户模块
 ]
 
 MIDDLEWARE = [
