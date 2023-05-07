@@ -152,3 +152,68 @@ CACHES = {
 }
 SESSION_ENGINE = "django.contrib.sessions.backends.cache"
 SESSION_CACHE_ALIAS = "session"
+
+"""
+配置日志
+"""
+cur_path = os.path.dirname(os.path.realpath(__file__))  # log_path是存放日志的路径
+log_path = os.path.join(os.path.dirname(cur_path), 'logs')
+if not os.path.exists(log_path):
+    os.mkdir(log_path)  # 如果不存在这个logs文件夹，就自动创建一个
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,  # 是否禁用已经存在的日志
+    'formatters': {
+        # 日志格式
+        'standard': {
+            'format': '[%(asctime)s] [%(levelname)s] [%(filename)s:%(lineno)d] [%(module)s:%(funcName)s]' '%(message)s'
+        },
+        'simple': {  # 简单格式
+            'format': '[%(levelname)s] [%(module)s:%(funcName)s]' '%(message)s'
+        },
+        'verbose': {
+            'format': '[%(asctime)s] [%(levelname)s] [%(module)s:%(funcName)s]' '%(message)s'
+        },
+    },
+    # 过滤
+    'filters': {
+        # django在debug模式下才输出日志
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        }
+    },
+    # 定义具体处理日志的方式
+    'handlers': {
+        'console': {
+            'level': 'INFO',
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'simple'
+        },
+        'file': {
+            'level': 'INFO',
+            'class': 'logging.handlers.RotatingFileHandler',
+            'filename': os.path.join(log_path, 'meiduo_mall-{}.log'.format(time.strftime('%Y-%m-%d'))),  # 日志文件的位置
+            'maxBytes': 300 * 1024 * 1024,  # 文件大小  300M
+            'backupCount': 10,  # 备份数
+            'formatter': 'standard',  # 输出格式
+            'encoding': 'utf-8',  # 设置默认编码，否则打印出来汉字乱码
+        },
+    },
+    # 配置用哪几种 handlers 来处理日志
+    'loggers': {
+        # 类型 为 django 处理所有类型的日志， 默认调用
+        'django': {  # 定义了一个名为django的日志器
+            'handlers': ['console', 'file'],  # 可以同时向终端与文件中输出日志
+            'propagate': True,  # 是否继续传递日志信息
+            'level': 'INFO',  # 日志器接收的最低日志级别
+        },
+        # log 调用时需要当作参数传入
+        'log': {
+            'handlers': ['console', 'file'],
+            'level': 'INFO',
+            'propagate': False
+        },
+    }
+}
