@@ -1,9 +1,14 @@
 # Create your views here.
+import logging
 import re
 
 from django import http
+from django.db import DatabaseError
 from django.shortcuts import render
 from django.views import View
+from users.models import User
+
+logger = logging.getLogger('django')
 
 
 class RegisterView(View):
@@ -43,5 +48,11 @@ class RegisterView(View):
         if allow != 'on':
             return http.HttpResponseForbidden('请勾选用户协议')
         # 保存注册数据
+        try:
+            User.objects.create_user(username=username, password=password, mobile=mobile)
+        except DatabaseError as e:
+            logger.error(e)
+            return render(request, 'register.html', {'register_errmsg': '注册失败'})
         # 状态保持
         # 响应结果
+        return http.HttpResponse('注册成功，返回到首页')
