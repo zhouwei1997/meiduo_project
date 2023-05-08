@@ -75,7 +75,7 @@ let vm = new Vue({
             this.check_mobile();
             this.check_allow();
             //在校验之后，注册数据中，只要存在错误，就禁止表单提交
-            if (this.error_name == true || this.error_password == true || this.error_password == true || this.mobile == true || this.allow == true) {
+            if (this.error_name == true || this.error_password == true || this.error_password == true || this.error_mobile == true || this.error_allow == true) {
                 //禁止表单提交
                 window.event.returnValue = false;
             }
