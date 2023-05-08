@@ -20,4 +20,6 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     # user
     url(r'^', include('users.urls', namespace='users')),
+    # contents
+    url(r'^', include('contents.urls', namespace='contents')),
 ]
