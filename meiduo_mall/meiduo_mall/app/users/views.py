@@ -4,7 +4,8 @@ import re
 
 from django import http
 from django.db import DatabaseError
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.urls import reverse
 from django.views import View
 from users.models import User
 
@@ -54,5 +55,5 @@ class RegisterView(View):
             logger.error(e)
             return render(request, 'register.html', {'register_errmsg': '注册失败'})
         # 状态保持
-        # 响应结果
-        return http.HttpResponse('注册成功，返回到首页')
+        # 响应结果；重定向到首页
+        return redirect(reverse('contents:index'))
