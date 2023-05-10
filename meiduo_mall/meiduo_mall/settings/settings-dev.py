@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     # 'meiduo_mall.app.users',  # 用户模块
     'users',  # 用户模块
     'contents',  # 首页模块
+    'verifications',  # 图像验证码模块
 ]
 
 MIDDLEWARE = [
