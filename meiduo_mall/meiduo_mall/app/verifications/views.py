@@ -7,6 +7,12 @@ from verifications import constants
 from verifications.libs.captcha.captcha import captcha
 
 
+class SMSCodeView(View):
+    """短信验证码"""
+    redis_conn = get_redis_connection('verify_code')
+    # redis_conn.setex('sms_%s' % uuid, constants.SMS_CODE_REDIS_EXPIRES, text)
+
+
 class ImageCodeView(View):
     """图像验证码"""
 
