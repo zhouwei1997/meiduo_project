@@ -4,9 +4,10 @@
 # @File : tasks.py
 import json
 
+from ronglian_sms_sdk import SmsSDK
+
 from celery_tasks.main import celery_app
 from celery_tasks.sms import constants
-from ronglian_sms_sdk import SmsSDK
 
 
 class CCP(object):
@@ -54,3 +55,7 @@ def send_sms_code(mobile, sms_code):
     send_ret = CCP().send_template(constants.SEND_SMS_TEMPLATE_ID, mobile,
                                    [sms_code, constants.SMS_CODE_REDIS_EXPIRES // 60])
     return send_ret
+
+
+if __name__ == '__main__':
+    CCP.send_template('1', '15027130472', ['1235', '2'])

@@ -8,11 +8,29 @@ from django.db import DatabaseError
 from django.shortcuts import render, redirect
 from django.urls import reverse
 from django.views import View
-from meiduo_mall.utils.response_code import RETCODE
 
+from meiduo_mall.utils.response_code import RETCODE
 from users.models import User
 
 logger = logging.getLogger('django')
+
+
+class MobileCountView(View):
+    """判断手机号时候重复注册"""
+
+    def get(self, request, mobile):
+        """
+        获取手机号
+        :param request:请求对象
+        :param mobile:手机号
+        :return:JSON
+        """
+        count = User.objects.filter(mobile=mobile).count()
+        return http.JsonResponse({
+            'code': RETCODE.OK,
+            'errmsg': '该手机号已经被注册',
+            'count': count
+        })
 
 
 class UsernameCountView(View):
