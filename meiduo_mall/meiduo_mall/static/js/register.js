@@ -62,6 +62,7 @@ let vm = new Vue({
                                 clearInterval(t);// 停止回调函数的执行
                                 this.sms_code_tip = '获取短信验证码' // 还原sms_code_tip的提示信息
                                 this.generate_image_code(); // 重新生成验证码
+                                this.send_flag = false;
                             } else {//正在倒计时
                                 num = num - 1
                                 this.sms_code_tip = num + '秒'
@@ -73,10 +74,12 @@ let vm = new Vue({
                             this.error_image_code_message = response.data.errmsg;
                             this.error_image_code = true;
                         }
+                        this.send_flag = false;
                     }
                 })
                 .catch(error => {
                     console.log(error.response);
+                    this.send_flag = false;
                 })
         },
         //生成图形验证码方法
