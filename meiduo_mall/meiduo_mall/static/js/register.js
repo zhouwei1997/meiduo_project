@@ -171,7 +171,7 @@ let vm = new Vue({
         },
         //校验短信验证码
         check_sms_code() {
-            if (this.sms_code.length != 6) {
+            if (this.sms_code.length != 4) {
                 this.error_sms_code_message = '请填写短信验证码';
                 this.error_sms_code = true;
             } else {
