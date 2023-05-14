@@ -230,3 +230,4 @@ LOGGING = {
 
 # 指定自定义的用户模型类  语法===>  '子应用.用户模型类'
 AUTH_USER_MODEL = 'users.User'
+AUTHENTICATION_BACKENDS = ['users.utils.UsernameMobileBackend']
