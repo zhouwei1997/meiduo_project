@@ -3,7 +3,7 @@ import logging
 import re
 
 from django import http
-from django.contrib.auth import login, authenticate
+from django.contrib.auth import login, authenticate, logout
 from django.db import DatabaseError
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -14,6 +14,22 @@ from meiduo_mall.utils.response_code import RETCODE
 from users.models import User
 
 logger = logging.getLogger('django')
+
+
+class LogoutView(View):
+    """退出登录"""
+
+    def get(self, request):
+        """
+        退出登录
+        :param request:
+        :return: 首页
+        """
+        logout(request)
+        # 删除cookie中的用户名
+        response = redirect(reverse('contents:index'))
+        response.delete_cookie('username')
+        return response
 
 
 class LoginView(View):
