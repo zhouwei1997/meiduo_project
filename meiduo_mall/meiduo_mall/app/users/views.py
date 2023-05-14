@@ -4,6 +4,7 @@ import re
 
 from django import http
 from django.contrib.auth import login, authenticate, logout
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import DatabaseError
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -14,6 +15,14 @@ from meiduo_mall.utils.response_code import RETCODE
 from users.models import User
 
 logger = logging.getLogger('django')
+
+
+class UserInfoView(LoginRequiredMixin, View):
+    """用户中心"""
+
+    def get(self, request):
+        """用户中心页面"""
+        return render(request, 'user_center_info.html')
 
 
 class LogoutView(View):
@@ -67,8 +76,14 @@ class LoginView(View):
         else:
             # 记住用户，状态保持周期为2周  默认 2周
             request.session.set_expiry(None)
-        # 首页展示用户名信息
-        response = redirect(reverse('contents:index'))
+        next = request.GET.get('next')
+        if next:
+            # 重定向到next
+            response = redirect(next)
+        else:
+            # 重定向到首页
+            # 首页展示用户名信息
+            response = redirect(reverse('contents:index'))
         response.set_cookie('username', user.username, max_age=3600 * 24 * 14)
         return response
 

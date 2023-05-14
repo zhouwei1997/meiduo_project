@@ -230,4 +230,7 @@ LOGGING = {
 
 # 指定自定义的用户模型类  语法===>  '子应用.用户模型类'
 AUTH_USER_MODEL = 'users.User'
+# 指定自定义用户认证后端
 AUTHENTICATION_BACKENDS = ['users.utils.UsernameMobileBackend']
+# 判断用户是否登录后，指定未登录用户重定向地址
+LOGIN_URL = '/login/'
