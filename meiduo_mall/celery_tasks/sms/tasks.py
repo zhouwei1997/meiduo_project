@@ -58,4 +58,5 @@ def send_sms_code(mobile, sms_code):
 
 
 if __name__ == '__main__':
-    CCP.send_template('1', '15027130472', ['1235', '2'])
+    #  CCP.send_template('1', '15027130472', ['1235', '1'])
+    send_sms_code('15027130472', '1234')

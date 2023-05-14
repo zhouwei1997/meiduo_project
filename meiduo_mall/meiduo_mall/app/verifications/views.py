@@ -7,8 +7,8 @@ from django import http
 from django.views import View
 from django_redis import get_redis_connection
 
-from sms.tasks import send_sms_code
-from utils.response_code import RETCODE
+from celery_tasks.sms.tasks import send_sms_code
+from meiduo_mall.utils.response_code import RETCODE
 from verifications import constants
 from verifications.libs.captcha.captcha import captcha
 
