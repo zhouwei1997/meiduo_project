@@ -73,6 +73,9 @@ let vm = new Vue({
                             // 图像验证码错误
                             this.error_image_code_message = response.data.errmsg;
                             this.error_image_code = true;
+                        } else {
+                            this.error_image_code_message = response.data.errmsg;
+                            this.error_image_code = true;
                         }
                         this.send_flag = false;
                     }
@@ -192,6 +195,7 @@ let vm = new Vue({
             this.check_password();
             this.check_password2();
             this.check_mobile();
+            this.check_sms_code();
             this.check_allow();
             //在校验之后，注册数据中，只要存在错误，就禁止表单提交
             if (this.error_name == true || this.error_password == true || this.error_password == true || this.error_mobile == true || this.error_sms_code == true || this.error_allow == true) {
