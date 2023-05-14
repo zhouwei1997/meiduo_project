@@ -3,7 +3,7 @@ import logging
 import re
 
 from django import http
-from django.contrib.auth import login
+from django.contrib.auth import login, authenticate
 from django.db import DatabaseError
 from django.shortcuts import render, redirect
 from django.urls import reverse
@@ -14,6 +14,44 @@ from meiduo_mall.utils.response_code import RETCODE
 from users.models import User
 
 logger = logging.getLogger('django')
+
+
+class LoginView(View):
+    """用户登录"""
+
+    def get(self, request):
+        """
+        提供用户登录页面
+        :param request:
+        :return: 登录页面
+        """
+        return render(request, 'login.html')
+
+    def post(self, request):
+        """用户登录逻辑"""
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        remembered = request.POST.get('remembered')
+        if not all([username, password]):
+            return http.HttpResponseForbidden('缺少必传参数')
+        if not re.match(r'^[a-zA-Z0-9_]{5,20}$', username):
+            return http.HttpResponseForbidden('请输入正确的用户名或手机号')
+        if not re.match(r'^[0-9a-zA-Z]{8,20}$', password):
+            return http.HttpResponseForbidden('密码最少为8位，最长为20位')
+        # 认证登陆用户
+        user = authenticate(username=username, password=password)
+        if user is None:
+            return render(request, 'login.html', {'account_errmsg': '账号或密码错误'})
+        # 状态保持
+        login(request, user)
+        # 设置状态保持的周期
+        if remembered != 'on':
+            # 没有记住用户；浏览器会话结束就过期
+            request.session.set_expiry(0)
+        else:
+            # 记住用户，状态保持周期为2周  默认 2周
+            request.session.set_expiry(None)
+        return redirect(reverse('contents:index'))
 
 
 class MobileCountView(View):
