@@ -51,7 +51,10 @@ class LoginView(View):
         else:
             # 记住用户，状态保持周期为2周  默认 2周
             request.session.set_expiry(None)
-        return redirect(reverse('contents:index'))
+        # 首页展示用户名信息
+        response = redirect(reverse('contents:index'))
+        response.set_cookie('username', user.username, max_age=3600 * 24 * 14)
+        return response
 
 
 class MobileCountView(View):
@@ -149,4 +152,6 @@ class RegisterView(View):
         # 状态保持
         login(request, user)
         # 响应结果；重定向到首页
-        return redirect(reverse('contents:index'))
+        response = redirect(reverse('contents:index'))
+        response.set_cookie('username', user.username, max_age=3600 * 24 * 14)
+        return response
