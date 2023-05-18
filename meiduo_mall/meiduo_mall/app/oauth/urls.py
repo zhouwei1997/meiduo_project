@@ -8,5 +8,8 @@ from django.conf.urls import url
 from oauth import views
 
 urlpatterns = [
-    url(r'^qq/login/', views.QQAuthURLView.as_view()),
+    # 获取扫码页面
+    url(r'^qq/login/$', views.QQAuthURLView.as_view()),
+    # 处理QQ登录回调
+    url(r'^oauth_callback/$', views.QQAuthUserView.as_view()),
 ]

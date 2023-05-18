@@ -7,6 +7,16 @@ from django.views import View
 from meiduo_mall.utils.response_code import RETCODE
 
 
+class QQAuthUserView(View):
+    """处理QQ登录回调地址"""
+
+    def get(self, request):
+        """处理QQ登录回调"""
+        code = request.GET.get("code")
+        if not code:
+            return http.HttpResponseForbidden('获取code失败')
+
+
 class QQAuthURLView(View):
     """
     提供QQ登录页面
