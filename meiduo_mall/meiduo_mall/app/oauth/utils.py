@@ -4,9 +4,25 @@
 # @File : utils.py 
 # @description : 工具方法
 from django.conf import settings
-from itsdangerous import TimedJSONWebSignatureSerializer as Serialzier
+from itsdangerous import TimedJSONWebSignatureSerializer as Serialzier, BadData
 
 from oauth import constants
+
+
+def check_access_token(access_token_openid):
+    """
+    反序列化openid
+    :param access_token_openid:openid密文
+    :return: openid
+    """
+    s = Serialzier(settings.SECRET_KEY, constants.ACCESS_TOKEN_EXPIRES)
+    try:
+        data = s.loads(access_token_openid)
+    except BadData:
+        # 密文过期
+        return None
+    else:
+        return data.get('openid')
 
 
 def generate_access_token(openid):
