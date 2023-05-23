@@ -6,6 +6,7 @@ from QQLoginTool.QQtool import OAuthQQ
 from django import http
 from django.conf import settings
 from django.contrib.auth import login
+from django.contrib.auth.models import User
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.views import View
@@ -84,6 +85,38 @@ class QQAuthUserView(View):
             return render(
                 request, 'oauth_callback.html', {
                     'openid_errmsg': 'openid已失效'})
+        """
+        1、使用手机号查询对应的用户是否存在
+        2、如果手机号不存在，新建用户
+        3、如果手机号用户存在，需要校验用户
+        4、将用户绑定到openid
+        5、状态保持
+        6、cookies中写入用户名
+        7、响应结果
+        """
+        try:
+            user = User.objects.get(mobile=mobile)
+        except User.DoesNotExist:
+            user = User.objects.create_user(
+                username=mobile, password=password, mobile=mobile)
+        else:
+            if not user.check_password(password):
+                return render(
+                    request, 'oauth_callback.html', {
+                        'account_errmsg': '账号或密码错误'})
+        # oauth_qq_user = OAuthQQUser(user=user, openid=openid)
+        # oauth_qq_user.save()
+        try:
+            oauth_qq_user = OAuthQQUser.objects.create(
+                user=user, openid=openid)
+        except Exception as e:
+            logger.error(e)
+            return render(
+                request, 'oauth_callback.html', {
+                    'qq_login_errmsg': '账号或密码错误'})
+        login(request, oauth_qq_user.user)
+        return redirect(request.GET.get('state')).set_cookie(
+            'username', oauth_qq_user.user.username, max_age=3600 * 24 * 15)
 
 
 class QQAuthURLView(View):
