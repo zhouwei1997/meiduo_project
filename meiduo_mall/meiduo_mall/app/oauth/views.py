@@ -4,9 +4,14 @@ import logging
 from QQLoginTool.QQtool import OAuthQQ
 from django import http
 from django.conf import settings
+from django.contrib.auth import login
+from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import View
 
 from meiduo_mall.utils.response_code import RETCODE
+from oauth.models import OAuthQQUser
+from oauth.utils import generate_access_token
 
 logger = logging.getLogger('django')
 
@@ -32,6 +37,22 @@ class QQAuthUserView(View):
         except Exception as e:
             logging.error(e)
             return http.HttpResponseServerError('OAuth2.0认证失败')
+        # 判断openid是否绑定用户
+        try:
+            oauth_user = OAuthQQUser.objects.get(openid=openid)
+        except OAuthQQUser.DoesNotExist as e:
+            # openid未绑定用户
+            access_token_openid = generate_access_token(openid)
+            return render(
+                request, 'oauth_callback.html', {
+                    'access_token_openid': access_token_openid})
+        else:
+            # openid绑定用户
+            login(request, oauth_user.user)
+            return redirect(reverse('contents:index')).set_cookie(
+                'username',
+                oauth_user.user.username,
+                max_age=3600 * 24 * 15)
 
 
 class QQAuthURLView(View):
