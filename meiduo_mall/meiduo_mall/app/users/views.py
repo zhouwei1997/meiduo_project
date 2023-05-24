@@ -35,6 +35,7 @@ class EmailView(LoginRequiredJSONMixin, View):
         except Exception as e:
             logger.error(e)
             return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
+        # 发送验证邮件
         return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
 
 
