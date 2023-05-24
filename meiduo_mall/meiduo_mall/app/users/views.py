@@ -49,7 +49,7 @@ class UserInfoView(LoginRequiredMixin, View):
             'username': request.user.username,
             'mobile': request.user.mobile,
             'email': request.user.email,
-            'email_active': request.user.email_activem}
+            'email_active': request.user.email_active}
         return render(request, 'user_center_info.html', context)
 
 
