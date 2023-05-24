@@ -22,7 +22,7 @@ class EmailView(View):
     """添加邮箱"""
 
     def put(self, request):
-        json_str = request.body
+        json_str = request.body.decode()
         json_dict = json.loads(json_str)
         email = json_dict.get('email')
         if not re.match(r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
