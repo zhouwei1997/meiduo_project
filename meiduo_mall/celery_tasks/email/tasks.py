@@ -1,10 +1,8 @@
-# -*- coding:utf-8 -*-
-"""
-# @author ZhouWei
-# @date  2023/5/24
-# @file  tasks.py
-# @description
-"""
+# -*- coding: utf-8 -*- 
+# @Time : 2023/5/25 20:40 
+# @Author : 世间无事人
+# @File : tasks.py 
+# @description :
 import logging
 
 from django.conf import settings
@@ -19,10 +17,10 @@ logger = logging.getLogger('django')
 def send_verify_email(self, to_email, verify_url):
     """
     定义发送验证邮件任务
-    :param self: 
+    :param self:
     :param to_email: 收件人
     :param verify_url: 验证邮件链接
-    :return: 
+    :return:
     """
     subject = "美多商城邮箱验证"
     html_message = '<p>尊敬的用户您好！</p>' \

@@ -12,6 +12,7 @@ from django.urls import reverse
 from django.views import View
 from django_redis import get_redis_connection
 
+from celery_tasks.email.tasks import send_verify_email
 from meiduo_mall.utils.response_code import RETCODE
 from meiduo_mall.utils.views import LoginRequiredJSONMixin
 from users.models import User
@@ -36,6 +37,8 @@ class EmailView(LoginRequiredJSONMixin, View):
             logger.error(e)
             return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
         # 发送验证邮件
+        verify_url = 'www.itcast.cn'
+        send_verify_email.delay(email, verify_url)
         return http.JsonResponse({'code': RETCODE.OK, 'errmsg': 'OK'})
 
 

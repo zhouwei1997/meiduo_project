@@ -11,13 +11,11 @@ windows:celery -A celery_tasks.main worker -l info -P eventlet
 import os
 
 from celery import Celery
-from celery.utils.log import get_task_logger
 
 if not os.getenv('DJANGO_SETTINGS_MODULE'):
     # 指定配置文件路径
     os.environ['DJANGO_SETTINGS_MODULE'] = 'meiduo_mall.settings.settings-dev'
 
-log = get_task_logger('django')
 # 创建celery实例
 celery_app = Celery('meiduo')
 # 加载celery配置文件
