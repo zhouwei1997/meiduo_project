@@ -1,13 +1,28 @@
-# -*- coding: utf-8 -*- 
-# @Time : 2023/5/14 14:43 
+# -*- coding: utf-8 -*-
+# @Time : 2023/5/14 14:43
 # @Author : 世间无事人
 # @File : utils.py
 # 自定义用户认证后端，实现多账号登录
 import re
 
+from django.conf import settings
 from django.contrib.auth.backends import ModelBackend
+from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
 
+from users import constants
 from users.models import User
+
+
+def generate_verify_email_url(user):
+    """
+    商城邮箱激活链接
+    :param user:当前登录的用户
+    :return:token
+    """
+    s = Serializer(settings.SECRET_KEY, constants.VERIFY_EMAIL_TOKEN_EXPIRES)
+    data = {'user_id': user.id, 'email': user.email}
+    token = s.dumps(data)
+    return settings.EMAIL_VERIFY_URL + '?token=' + token.decode()
 
 
 def get_user_by_account(account):
