@@ -15,6 +15,7 @@ from django_redis import get_redis_connection
 from celery_tasks.email.tasks import send_verify_email
 from meiduo_mall.utils.response_code import RETCODE
 from meiduo_mall.utils.views import LoginRequiredJSONMixin
+from users import constants
 from users.models import User, Address
 from users.utils import generate_verify_email_url, check_verify_email_token
 
@@ -25,6 +26,10 @@ class AddressCreateView(LoginRequiredJSONMixin, View):
     """新增地址"""
 
     def post(self, request):
+        # 判断用户地址时候超过上限
+        count = request.user.addresses.count()
+        if count >= constants.USER_ADDRESS_COUNTS_LIMIT:
+            return http.JsonResponse({'code': RETCODE.THROTTLINGERR, 'errmsg': '超过用户地址上限'})
         """新增地址"""
         json_dict = json.loads(request.body.decode())
         receiver = json_dict.get('receiver')
@@ -35,7 +40,6 @@ class AddressCreateView(LoginRequiredJSONMixin, View):
         mobile = json_dict.get('mobile')
         tel = json_dict.get('tel')
         email = json_dict.get('email')
-
         if not all([receiver, province_id, city_id,
                     district_id, place, mobile]):
             return http.HttpResponseForbidden('缺少必传参数')
