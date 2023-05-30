@@ -7,7 +7,7 @@ from django.views import View
 
 from areas import constants
 from areas.models import Area
-from utils.response_code import RETCODE
+from meiduo_mall.utils.response_code import RETCODE
 
 logger = logging.getLogger('django')
 
