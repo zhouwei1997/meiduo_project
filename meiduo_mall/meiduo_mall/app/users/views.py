@@ -36,15 +36,20 @@ class AddressCreateView(LoginRequiredJSONMixin, View):
         tel = json_dict.get('tel')
         email = json_dict.get('email')
 
-        if not all([receiver, province_id, city_id, district_id, place, mobile]):
+        if not all([receiver, province_id, city_id,
+                    district_id, place, mobile]):
             return http.HttpResponseForbidden('缺少必传参数')
         if not re.match(r'^1[3-9]\d{9}$', mobile):
             return http.HttpResponseForbidden('参数mobile有误')
         if tel:
-            if not re.match(r'^(0[0-9]{2,3}-)?([2-9][0-9]{6,7})+(-[0-9]{1,4})?$', tel):
+            if not re.match(
+                    r'^(0[0-9]{2,3}-)?([2-9][0-9]{6,7})+(-[0-9]{1,4})?$',
+                    tel):
                 return http.HttpResponseForbidden('参数tel有误')
         if email:
-            if not re.match(r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
+            if not re.match(
+                    r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$',
+                    email):
                 return http.HttpResponseForbidden('参数email有误')
         try:
             address = Address.objects.crearte(
@@ -68,9 +73,22 @@ class AddressCreateView(LoginRequiredJSONMixin, View):
                 'code': RETCODE.DBERR,
                 'errmsg': '新增地址失败'
             })
+        # 新增地址成功后，将新增的地址响应给前端实现局部刷新
+        address_dict = {
+            "id": address.id,
+            "title": address.title,
+            "receiver": address.receiver,
+            "province": address.province.name,
+            "city": address.city.name,
+            "district": address.district.name,
+            "place": address.place,
+            "mobile": address.mobile,
+            "tel": address.tel,
+            "email": address.email}
         return http.JsonResponse({
             'code': RETCODE.OK,
-            'errmsg': '新增地址成功'
+            'errmsg': '新增地址成功',
+            'address': address_dict
         })
 
 
@@ -115,7 +133,9 @@ class EmailView(LoginRequiredJSONMixin, View):
         json_str = request.body.decode()
         json_dict = json.loads(json_str)
         email = json_dict.get('email')
-        if not re.match(r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$', email):
+        if not re.match(
+                r'^[a-z0-9][\w\.\-]*@[a-z0-9\-]+(\.[a-z]{2,5}){1,2}$',
+                email):
             return http.HttpResponseForbidden('参数email有误')
         # 赋值给email字段
         try:
@@ -123,7 +143,8 @@ class EmailView(LoginRequiredJSONMixin, View):
             request.user.save()
         except Exception as e:
             logger.error(e)
-            return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
+            return http.JsonResponse(
+                {'code': RETCODE.DBERR, 'errmsg': '添加邮箱失败'})
         # 发送验证邮件
         verify_url = generate_verify_email_url(request.user)
         send_verify_email.delay(email, verify_url)
