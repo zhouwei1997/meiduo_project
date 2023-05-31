@@ -40,7 +40,7 @@ class DefaultAddressView(LoginRequiredJSONMixin, View):
         except Exception as e:
             logger.error(e)
             return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '设置默认地址失败'})
-        return http.JsonResponse({'code': RETCODE.Ok, 'errmsg': '设置默认地址成功'})
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '设置默认地址成功'})
 
 
 class UpdateDestroyAddressView(LoginRequiredJSONMixin, View):
