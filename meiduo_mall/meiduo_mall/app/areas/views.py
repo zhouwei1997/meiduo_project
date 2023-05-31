@@ -12,7 +12,7 @@ from meiduo_mall.utils.response_code import RETCODE
 logger = logging.getLogger('django')
 
 
-class AreaView(View):
+class AreasView(View):
     """省市区三级联动"""
 
     def get(self, request):
@@ -27,12 +27,12 @@ class AreaView(View):
                     province_model_list = Area.objects.filter(
                         parent_id__isnull=True)
                     province_list = []
-                    for provice_model in province_model_list:
-                        provice_dict = {
-                            "id": provice_model.id,
-                            "name": provice_model.name
+                    for province_model in province_model_list:
+                        province_dict = {
+                            "id": province_model.id,
+                            "name": province_model.name
                         }
-                        province_list.append(provice_dict)
+                        province_list.append(province_dict)
                         # 缓存省份字典列表数据
                         cache.set('province_list', province_list, constants.CACHE_EXPIRES)
                 except Exception as e:
@@ -40,7 +40,7 @@ class AreaView(View):
                     return http.JsonResponse(
                         {'code': RETCODE.DBERR, 'errmsg': '查询省份数据错误'})
             return http.JsonResponse(
-                {'code': RETCODE.OK, 'errmsg': 'OK', 'provice_list': province_list})
+                {'code': RETCODE.OK, 'errmsg': 'OK', 'province_list': province_list})
         else:
             sub_data = cache.get('sub_area_' + area_id)
             if not sub_data:

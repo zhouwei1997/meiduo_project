@@ -56,7 +56,7 @@ class AddressCreateView(LoginRequiredJSONMixin, View):
                     email):
                 return http.HttpResponseForbidden('参数email有误')
         try:
-            address = Address.objects.crearte(
+            address = Address.objects.create(
                 user=request.user,
                 title=receiver,
                 receiver=receiver,
