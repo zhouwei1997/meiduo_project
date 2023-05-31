@@ -25,6 +25,22 @@ logger = logging.getLogger('django')
 class UpdateDestroyAddressView(LoginRequiredJSONMixin, View):
     """修改和删除地址"""
 
+    def delete(self, request, address_id):
+        """
+        删除地址，使用逻辑删除
+        :param request:
+        :param address_id: 地址ID
+        :return:
+        """
+        try:
+            address = Address.objects.get(id=address_id)
+            address.is_deleted = True
+            address.save()
+        except Exception as e:
+            logger.error(e)
+            return http.JsonResponse({'code': RETCODE.DBERR, 'errmsg': '删除地址失败'})
+        return http.JsonResponse({'code': RETCODE.OK, 'errmsg': '删除地址成功'})
+
     def put(self, request, address_id):
         """
         修改地址
