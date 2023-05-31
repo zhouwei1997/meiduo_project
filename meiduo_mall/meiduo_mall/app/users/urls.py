@@ -30,4 +30,6 @@ urlpatterns = [
     url(r'^addresses/create/$', views.AddressCreateView.as_view()),
     # 修改和删除地址
     url(r'^addresses/(?P<address_id>\d+)/$', views.UpdateDestroyAddressView.as_view()),
+    # 设置默认地址
+    url(r'^addresses/(?P<address_id>\d+)/default/$', views.DefaultAddressView.as_view()),
 ]
