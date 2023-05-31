@@ -100,8 +100,30 @@ class AddressView(LoginRequiredMixin, View):
     """用户收货地址"""
 
     def get(self, request):
-        """提供收获地址页面"""
-        return render(request, 'user_center_site.html')
+        """查询并展示用户地址信息"""
+        # 获取用户的地址列表
+        login_user = request.user
+        addresses = Address.objects.filter(user=login_user, is_deleted=False)
+        address_list = []
+        for address in addresses:
+            address_dict = {
+                "id": address.id,
+                "title": address.title,
+                "receiver": address.receiver,
+                "province": address.province.name,
+                "city": address.city.name,
+                "district": address.district.name,
+                "place": address.place,
+                "mobile": address.mobile,
+                "tel": address.tel,
+                "email": address.email
+            }
+            address_list.append(address_dict)
+        context = {
+            'default_address_id': login_user.default_address_id,
+            'addresses': address_list
+        }
+        return render(request, 'user_center_site.html', context)
 
 
 class VerifyEmailView(View):
