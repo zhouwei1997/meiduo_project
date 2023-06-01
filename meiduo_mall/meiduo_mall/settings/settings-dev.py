@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'verifications',  # 图像验证码模块
     'oauth',  # 第三方注册模块
     'areas',  # 省市区三级联动
+    'goods',  # 商品
 ]
 
 MIDDLEWARE = [
