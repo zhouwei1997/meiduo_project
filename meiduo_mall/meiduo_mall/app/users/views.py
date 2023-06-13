@@ -298,7 +298,7 @@ class AddressView(LoginRequiredMixin, View):
             }
             address_list.append(address_dict)
         context = {
-            'default_address_id': login_user.default_address_id,
+            'default_address_id': login_user.default_address_id or '0',
             'addresses': address_list
         }
         return render(request, 'user_center_site.html', context)
