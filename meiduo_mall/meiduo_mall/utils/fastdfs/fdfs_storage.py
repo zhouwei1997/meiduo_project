@@ -3,17 +3,19 @@
 # @Author : 世间无事人
 # @File : fdfs_storage.py 
 # @description :
+from django.conf import settings
 from django.core.files.storage import Storage
 
 
 class FastDFSStorage(Storage):
     """自定义文件存储类"""
 
-    # def __init__(self, option=None):
-    #     """文件存储类初始化"""
-    #     if not option:
-    #         option = settings.CUSTOM_STORAGE_OPTIONS
-    #     pass
+    def __init__(self, fdfs_base_url=None):
+        """文件存储类初始化"""
+        # if not fdfs_base_url:
+        #     self.fdfs_base_url = settings.FDFS_BASE_URL
+        # self.fdfs_base_url = fdfs_base_url
+        self.fdfs_base_url = fdfs_base_url or settings.FDFS_BASE_URL
 
     def _open(self, name, mode='rb'):
         """
@@ -39,4 +41,4 @@ class FastDFSStorage(Storage):
         :param name: 文件相对路径
         :return: 文件全路径
         """
-        return 'http://192.168.183.10:88/' + name
+        return settings.FDFS_BASE_URL + name
