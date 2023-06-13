@@ -1,7 +1,9 @@
 # Create your views here.
 from django import http
+from django.shortcuts import render
 from django.views import View
 
+from contents.utils import get_categories
 from goods.models import GoodsCategory
 
 
@@ -21,3 +23,6 @@ class ListView(View):
             category = GoodsCategory.objects.get(id=category_id)
         except GoodsCategory.DoesNotExist:
             return http.HttpResponseForbidden('参数category_id不存在')
+        # 查询商品分类
+        categories = get_categories()
+        return render(request, 'list.html', {'categories': categories})
