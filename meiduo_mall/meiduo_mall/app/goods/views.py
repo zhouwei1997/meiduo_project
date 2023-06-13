@@ -5,6 +5,7 @@ from django.views import View
 
 from contents.utils import get_categories
 from goods.models import GoodsCategory
+from goods.utils import get_breadcrumb
 
 
 class ListView(View):
@@ -20,9 +21,14 @@ class ListView(View):
         """
         # 校验category_id的范围
         try:
+            # 三级类别
             category = GoodsCategory.objects.get(id=category_id)
         except GoodsCategory.DoesNotExist:
             return http.HttpResponseForbidden('参数category_id不存在')
         # 查询商品分类
         categories = get_categories()
-        return render(request, 'list.html', {'categories': categories})
+        # 查询面包屑导航 一级-> 二级-> 三级
+        breadcrumb = get_breadcrumb(category)
+        return render(
+            request, 'list.html', {
+                'categories': categories, 'breadcrumb': breadcrumb})
