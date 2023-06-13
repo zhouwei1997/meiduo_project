@@ -1,5 +1,6 @@
 # Create your views here.
 from django import http
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.views import View
 
@@ -43,6 +44,15 @@ class ListView(View):
         breadcrumb = get_breadcrumb(category)
         # 分页和排序查询：category_id 查询SKU，一查多
         skus = category.sku_set.filter(is_launched=True).order_by(sort_field)
+        # 创建分页器
+        paginator = Paginator(skus, 5)  # skus分页，每页5条
+        # 获取到当前用户查看的记录
+        page_skus = paginator.page(page_num)  # 获取到page_num页中的五条记录
+        # 获取总页数
+        total_page = paginator.num_pages
+        context = {
+            'categories': categories,
+            'breadcrumb': breadcrumb
+        }
         return render(
-            request, 'list.html', {
-                'categories': categories, 'breadcrumb': breadcrumb})
+            request, 'list.html', context)
