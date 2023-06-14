@@ -1,6 +1,6 @@
 # Create your views here.
 from django import http
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
 from django.views import View
 
@@ -46,13 +46,21 @@ class ListView(View):
         skus = category.sku_set.filter(is_launched=True).order_by(sort_field)
         # 创建分页器
         paginator = Paginator(skus, 5)  # skus分页，每页5条
-        # 获取到当前用户查看的记录
-        page_skus = paginator.page(page_num)  # 获取到page_num页中的五条记录
+        try:
+            # 获取到当前用户查看的记录
+            page_skus = paginator.page(page_num)  # 获取到page_num页中的五条记录
+        except EmptyPage:
+            return http.HttpResponseNotFound('EmptyPage 页码不存在')
         # 获取总页数
         total_page = paginator.num_pages
         context = {
             'categories': categories,
-            'breadcrumb': breadcrumb
+            'breadcrumb': breadcrumb,
+            'page_skus': page_skus,
+            'total_page': total_page,
+            'page_num': page_num,
+            'sort': sort,
+            'category_id': category_id
         }
         return render(
             request, 'list.html', context)
