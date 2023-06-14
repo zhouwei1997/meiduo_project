@@ -5,8 +5,33 @@ from django.shortcuts import render
 from django.views import View
 
 from contents.utils import get_categories
-from goods.models import GoodsCategory
+from goods.models import GoodsCategory, SKU
 from goods.utils import get_breadcrumb
+from meiduo_mall.utils.response_code import RETCODE
+
+
+class HotGoodsView(View):
+    """商品热销排行"""
+
+    def get(self, request, category_id):
+        # 查询指定分类的SKU信息，而且必须是上架的状态，然后按照销量由高到低排序，最后切片取出前两位
+        skus = SKU.objects.filter(
+            category_id=category_id, is_launched=True).order_by('-sales')[:2]
+        # 模型列表转字典
+        hot_skus = []
+        for sku in skus:
+            sku_dict = {
+                'id': sku.id,
+                'name': sku.name,
+                'price': sku.price,
+                'default_image_url': sku.default_image.url
+            }
+            hot_skus.append(sku_dict)
+        return http.JsonResponse({
+            'code': RETCODE.OK,
+            'errmsg': 'OK',
+            'hot_skus': hot_skus
+        })
 
 
 class ListView(View):
