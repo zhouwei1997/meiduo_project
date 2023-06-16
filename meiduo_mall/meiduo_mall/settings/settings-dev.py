@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'oauth',  # 第三方注册模块
     'areas',  # 省市区三级联动
     'goods',  # 商品
+    'haystack',  # 全文搜索
 ]
 
 MIDDLEWARE = [
@@ -256,3 +257,14 @@ EMAIL_VERIFY_URL = 'http://127.0.0.1:8000/emails/verification'  # 邮箱验证�
 DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fastdfs.fdfs_storage.FastDFSStorage'
 # FastDFS参数
 FDFS_BASE_URL = 'http://192.168.183.10:88/'
+
+# haystack
+HAYSTACK_CONNECTIONS = {
+    'default': {
+        'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
+        'URL': 'http://192.168.183.10:9200/',  # Elasticsearch服务器的地址
+        'INDEX_NAME': 'meiduo_mall',  # 索引名称
+    }
+}
+# 添加此项，当数据库改变时，会自动更新索引，非常方便
+HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
