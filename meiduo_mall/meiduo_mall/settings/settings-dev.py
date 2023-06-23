@@ -259,12 +259,19 @@ DEFAULT_FILE_STORAGE = 'meiduo_mall.utils.fastdfs.fdfs_storage.FastDFSStorage'
 FDFS_BASE_URL = 'http://192.168.183.10:88/'
 
 # haystack
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': '192.168.183.10:9200'
+    },
+}
 HAYSTACK_CONNECTIONS = {
     'default': {
         'ENGINE': 'haystack.backends.elasticsearch_backend.ElasticsearchSearchEngine',
-        'URL': 'http://192.168.183.10:9200/',  # Elasticsearch服务器的地址
-        'INDEX_NAME': 'meiduo_mall',  # 索引名称
-    }
+        'URL': 'http://192.168.183.10:9200/',
+        'INDEX_NAME': 'meiduo_mall',
+    },
 }
-# 添加此项，当数据库改变时，会自动更新索引，非常方便
+# 设置每页显示的数据量
+HAYSTACK_SEARCH_RESULTS_PER_PAGE = 5
+# 添加此项，当数据库改变时，会自动更新索引
 HAYSTACK_SIGNAL_PROCESSOR = 'haystack.signals.RealtimeSignalProcessor'
