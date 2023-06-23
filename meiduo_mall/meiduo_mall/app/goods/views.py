@@ -10,6 +10,14 @@ from goods.utils import get_breadcrumb
 from meiduo_mall.utils.response_code import RETCODE
 
 
+class DetailView(View):
+    """商品详情页"""
+
+    def get(self, request, sku_id):
+        """提供商品详情页"""
+        return render(request, 'detail.html')
+
+
 class HotGoodsView(View):
     """商品热销排行"""
 
