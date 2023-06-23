@@ -1,4 +1,6 @@
 # Create your views here.
+import logging
+
 from django import http
 from django.core.paginator import Paginator, EmptyPage
 from django.shortcuts import render
@@ -9,13 +11,58 @@ from goods.models import GoodsCategory, SKU
 from goods.utils import get_breadcrumb
 from meiduo_mall.utils.response_code import RETCODE
 
+logger = logging.getLogger('django')
+
 
 class DetailView(View):
     """商品详情页"""
 
     def get(self, request, sku_id):
         """提供商品详情页"""
-        return render(request, 'detail.html')
+        try:
+            sku = SKU.objects.get(id=sku_id)
+        except SKU.DoesNotExist as e:
+            logger.error(e)
+            return render(request, '404.html')
+        # 查询商品分类
+        categories = get_categories()
+        breadcrumb = get_breadcrumb(sku.category)
+        sku_specs = sku.specs.order_by('spec_id')
+        sku_key = []
+        for spec in sku_specs:
+            sku_key.append(spec.option.id)
+        skus = sku.spu.sku_set.all()
+        # 构建不同规格参数的sku字典
+        spec_sku_map = {}
+        for s in skus:
+            # 获取sku的规格参数
+            s_specs = s.specs.order_by('spec_id')
+            key = []
+            for spec in s_specs:
+                key.append(spec.option.id)
+            spec_sku_map[tuple(key)] = s.id
+        # 获取当前商品的规格商品
+        goods_specs = sku.spu.specs.order_by('id')
+        # 若当前sku的规格信息不完整，则不在继续
+        if len(sku_key) < len(goods_specs):
+            return
+        for index, spec in enumerate(goods_specs):
+            # 复制道歉sku的规格键
+            key = sku_key[:]
+            # 该规格的选项
+            spec_options = spec.options.all()
+            for option in spec_options:
+                # 在规格参数sku字典中查找复合道歉规格的sku
+                key[index] = option.id
+                option.sku_id = spec_sku_map.get(tuple(key))
+            spec.spec_options = spec_options
+        context = {
+            'categories': categories,
+            'breadcrumb': breadcrumb,
+            'sku': sku,
+            'specs': goods_specs
+        }
+        return render(request, 'detail.html', context)
 
 
 class HotGoodsView(View):
