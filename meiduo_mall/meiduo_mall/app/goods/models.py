@@ -223,7 +223,7 @@ class SKUSpecification(BaseModel):
         return '%s: %s - %s' % (self.sku, self.spec.name, self.option.value)
 
 
-class GoodVisitCount(BaseModel):
+class GoodsVisitCount(BaseModel):
     """统计分类商品访问量的模型类"""
     category = models.ForeignKey(GoodsCategory, on_delete=models.CASCADE, verbose_name='商品类别')
     count = models.IntegerField(verbose_name="访问量", default=0)
